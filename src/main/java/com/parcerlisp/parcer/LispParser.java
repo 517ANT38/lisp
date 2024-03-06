@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class LispParser {
@@ -47,7 +48,9 @@ public class LispParser {
         int start = data.indexOf("(")+1;
         int pr = data.indexOf(" ") == -1 ? start : data.indexOf(" ");
         int end = data.lastIndexOf(")") == -1 ? data.length() - 1 : data.lastIndexOf(")");
-
+        
+        LispExpression tmp = new LispExpression("(", null);
+        
         String value = data.substring(start, pr).trim();
         
         String[] childValues = data.substring(pr, end).split("[\\s+()]");
@@ -59,7 +62,8 @@ public class LispParser {
             }
             children.add(parseExpression(s));
         }
-
-        return new LispExpression(value, children);
+        children.add(new LispExpression(")",null));
+        tmp.setChildren(new ArrayList<>(Arrays.asList(new LispExpression(value, children))));
+        return tmp;
     }
 }
